@@ -4,7 +4,7 @@
 
 void createTrainList(Train** t){
     *t = (Train*)malloc(sizeof(Train));
-    (*t) -> trainsAmount = 0;
+    (*t) -> wagonsAmount = 0;
     (*t) -> next = NULL;
     (*t) -> wagons = NULL;
 }
@@ -19,16 +19,15 @@ void addTrain(Train** t, int idT){
     no -> idT = idT;
     no -> wagons = (Wagons*)malloc(sizeof(Wagons));
     no -> next = *t;
-    
+
     *t = no;
-    (*t) -> trainsAmount++;
 }
 
 void removeTrain(Train** t, int idT){
     if(*t == NULL){
         return;
     }
-    
+
     Train *temp = (*t) -> next;
     Train *aux = NULL;
     Train *aux2 = *t;
@@ -48,19 +47,22 @@ void removeTrain(Train** t, int idT){
         }
     }
     
-    (*t) -> trainsAmount--;
     free(aux);
 }
 
 void printTrainList(Train** t){
     Train *aux = *t;
+    Wagons *w = (*t) -> wagons;
+    
     while(aux -> next != NULL){
-        printf("[%d]\n", aux -> idT);
+        printf("[%d]", aux -> idT);
+        int i = 0;
+        while(i < aux -> wagonsAmount){
+            printf("[product: %s | id: %d]", w -> productType, w -> idW);
+        }
+        printf("\n");
         aux = aux -> next;
     }
 }
-
-
-
 
 
