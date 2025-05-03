@@ -56,12 +56,13 @@ void printTrainList(Train** t){
     
     while(aux -> next != NULL){
         printf("[%d]", aux -> idT);
+        int i = 0;
+        while(i < aux -> wagonsAmount){
+            printf("[product: %s | id: %d]", w -> productType, w -> idW);
+        }
         printf("\n");
         aux = aux -> next;
     }
 }
-
-
-
 
 
