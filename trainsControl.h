@@ -3,7 +3,9 @@
 
 // Defines Trains and Wagons structs
 struct train{
+    //Train ID
     int idT;
+    //Wagons Amount of this Train
     int wagonsAmount;
     // Pointer to first train   
     struct train* next;
@@ -13,8 +15,11 @@ struct train{
 typedef struct train Train;
 
 struct wagons{
+    //Wagons ID
     int idW;
+    //Product Type from Wagon
     char productType[31];
+    //Doubly linked List 
     struct wagons* next;
     struct wagons* prev;
 };
