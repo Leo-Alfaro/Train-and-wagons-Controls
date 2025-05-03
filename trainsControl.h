@@ -4,17 +4,16 @@
 // Defines Trains and Wagons structs
 struct train{
     int idT;
-    int trainsAmount;
+    int wagonsAmount;
     // Pointer to first train   
     struct train* next;
-    // Pointer to last wagon
+    // Pointer to first wagon
     struct wagons* wagons; 
 };
 typedef struct train Train;
 
 struct wagons{
     int idW;
-    int wagonsAmount;   
     char productType[31];
     struct wagons* next;
     struct wagons* prev;
