@@ -4,7 +4,6 @@
 
 void createTrainList(Train** t){
     *t = (Train*)malloc(sizeof(Train));
-    (*t) -> trainsAmount = 0;
     (*t) -> next = NULL;
     (*t) -> wagons = NULL;
 }
@@ -21,7 +20,6 @@ void addTrain(Train** t, int idT){
     no -> next = *t;
     
     *t = no;
-    (*t) -> trainsAmount++;
 }
 
 void removeTrain(Train** t, int idT){
@@ -47,8 +45,6 @@ void removeTrain(Train** t, int idT){
             aux2 = aux2 -> next;
         }
     }
-    
-    (*t) -> trainsAmount--;
     free(aux);
 }
 
