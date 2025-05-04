@@ -38,6 +38,7 @@ void addTrain(Train** t, int idT) {
 		printf("\n-- Train added successfully! --\n\n");
 	} else {
 		printf("\n-- This id already exists --\n");
+        free(no);
 	}
 }
 
