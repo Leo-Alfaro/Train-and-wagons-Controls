@@ -65,6 +65,7 @@ void removeTrain(Train** t, int idT) {
 			printf("\nThis train does not exist\n");
 		}
 	}
+	printf("\n-> Trains added successfully! --\n\n");
 	//free the object
 	free(aux);
 }
@@ -94,7 +95,7 @@ void printTrainList(Train** t) {
 	}
 }
 
-int addWagon(Train** t, int idT, int idW, char* productType, int position) {
+int addWagon(Train** t, int idW, char* productType, int position) {
 	//Space allocation of the new Wagon
 	Wagons* new = (Wagons*) malloc(sizeof(Wagons));
 	if(new == NULL) {
@@ -108,27 +109,13 @@ int addWagon(Train** t, int idT, int idW, char* productType, int position) {
 	new->prev = NULL;
 	strcpy(new->productType, productType);
 
-	//Search for correct Train
-	Train* TTemp = *t;
-	if(TTemp == NULL) {
-		printf("Empty train list.\n");
-		return 0;
-	}
-	while(TTemp != NULL && TTemp->idT != idT) {
-		TTemp = TTemp->next;
-	}
-	if(TTemp == NULL) {
-		printf("Train ID non-existent.\n");
-		return 0;
-	}
-
 
 	//Search the position
-	Wagons* WTemp = TTemp->wagons;
+	Wagons* WTemp = (*t)->wagons;
 	Wagons* prevWTemp = NULL;
 	if(WTemp == NULL) {
-		TTemp->wagons = new;
-		TTemp->wagonsAmount++;
+		(*t)->wagons = new;
+		(*t)->wagonsAmount++;
 		return 1;
 	}
 	int i = 1;
@@ -141,37 +128,23 @@ int addWagon(Train** t, int idT, int idW, char* productType, int position) {
 	//Add in position
 	if(i == 1) {
 		new->next = WTemp;
-		TTemp->wagons->prev = new;
-		TTemp->wagons = new;
-		TTemp->wagonsAmount++;
+		(*t)->wagons->prev = new;
+		(*t)->wagons = new;
+		(*t)->wagonsAmount++;
 		return 1;
 	}
 	new->next = WTemp;
 	new->prev = prevWTemp;
 	prevWTemp->next = new;
 	if(WTemp != NULL) WTemp->prev = new;
-	TTemp->wagonsAmount++;
+	(*t)->wagonsAmount++;
 
 	return 1;
 }
 
-Wagons* removeWagon(Train** t, int idT, int position) {
-	//Search for correct Train
-	Train* TTemp = *t;
-	if(TTemp == NULL) {
-		printf("-- Empty train list. --\n");
-		return NULL;
-	}
-	while(TTemp != NULL && TTemp->idT != idT) {
-		TTemp = TTemp->next;
-	}
-	if(TTemp == NULL) {
-		printf("-- Train ID non-existent. --\n");
-		return NULL;
-	}
-
+Wagons* removeWagon(Train** t, int position) {
 	//Search for correct Wagon
-	Wagons* WTemp = TTemp->wagons;
+	Wagons* WTemp = (*t)->wagons;
 	if(WTemp == NULL) {
 		printf("-- Empty wagon list --\n");
 		return NULL;
@@ -186,11 +159,11 @@ Wagons* removeWagon(Train** t, int idT, int position) {
 
 	//Change pointers
 	if(prevWTemp != NULL) prevWTemp->next = WTemp->next;
-	if(WTemp == TTemp->wagons) TTemp->wagons = WTemp->next;
+	if(WTemp == (*t)->wagons) (*t)->wagons = WTemp->next;
 	if(WTemp->next != NULL) WTemp->next->prev = prevWTemp;
 
 	//Decrease Amount
-	TTemp->wagonsAmount--;
+	(*t)->wagonsAmount--;
 
 	//Cleaning Wagon Pointers
 	WTemp->next = NULL;
@@ -199,16 +172,16 @@ Wagons* removeWagon(Train** t, int idT, int position) {
 	return WTemp;
 }
 
-void copyWagonToAnotherTrain(Train** t, int idT, int id2T, int positionToRemove, int positionToAdd) {
+void copyWagonToAnotherTrain(Train** t, Train** t2, int positionToRemove, int positionToAdd) {
 	//Remove from first Train
-	Wagons* WTemp = removeWagon(t, idT, positionToRemove);
+	Wagons* WTemp = removeWagon(t, positionToRemove);
 	if(WTemp == NULL) {
 		free(WTemp);
 		return;
 	}
 
 	//Add in the second Train, only a copy
-	int valid = addWagon(t, id2T, WTemp->idW, WTemp->productType, positionToAdd);
+	int valid = addWagon(t2, WTemp->idW, WTemp->productType, positionToAdd);
 	if(!valid) {
 		free(WTemp);
 		return;
@@ -239,23 +212,10 @@ int checkChar(char *input) {
 	return num;
 }
 
-void changeOrderWagon(Train** t, int idT, int idW, int newPosition) {
-	//Search for correct Train
-	Train* TTemp = *t;
-	if(TTemp == NULL) {
-		printf("-- Empty train list. --\n");
-		return;
-	}
-	while(TTemp != NULL && TTemp->idT != idT) {
-		TTemp = TTemp->next;
-	}
-	if(TTemp == NULL) {
-		printf("-- Train ID non-existent. --\n");
-		return;
-	}
+void changeOrderWagon(Train** t, int idW, int newPosition) {
 
 	//Search for correct Wagon
-	Wagons* WTemp = TTemp->wagons;
+	Wagons* WTemp = (*t)->wagons;
 	if(WTemp == NULL) {
 		printf("-- Empty wagon list --\n");
 		return;
@@ -274,13 +234,13 @@ void changeOrderWagon(Train** t, int idT, int idW, int newPosition) {
 
 	//Change pointers
 	if(prevWTemp != NULL) prevWTemp->next = WTemp->next;
-	if(WTemp == TTemp->wagons) TTemp->wagons = WTemp->next;
+	if(WTemp == (*t)->wagons) (*t)->wagons = WTemp->next;
 	if(WTemp->next != NULL) WTemp->next->prev = prevWTemp;
 
 	//verify if the list its not empty
-	Wagons* WTemp2 = TTemp->wagons;
+	Wagons* WTemp2 = (*t)->wagons;
 	if(WTemp == NULL) {
-		TTemp->wagons = WTemp2;
+		(*t)->wagons = WTemp2;
 		WTemp2->next = NULL;
 		WTemp2->prev = NULL;
 		return;
@@ -298,8 +258,8 @@ void changeOrderWagon(Train** t, int idT, int idW, int newPosition) {
 	//Add in position
 	if(j == 1) {
 		WTemp->next = WTemp2;
-		TTemp->wagons->prev = WTemp;
-		TTemp->wagons = WTemp;
+		(*t)->wagons->prev = WTemp;
+		(*t)->wagons = WTemp;
 		return;
 	}
 	WTemp->next = WTemp2;
@@ -324,7 +284,3 @@ Train *searchForTrain(Train **t, int idT) {
 	}
 	return TTemp;
 }
-
-
-
-

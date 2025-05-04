@@ -9,44 +9,53 @@ int main()
 	createTrainList(&l);
 	int n = 0;
 	char input[15];
-
-	for(int i = 0; i < 1; ) {
+	int id;
+	int tam;
+	int idT;
+	int idW;
+	int p;
+	int id2T;
+	int pR;
+	int pA;
+	
+	while (n != 8)
+	{
 		setbuf(stdin, NULL);
 
 		printf("1-> add train\n2-> remove train\n3-> add wagon\n4-> remove wagon\n5-> change wagon to another train\n6-> change the order of the wagons\n7-> print train list\n8-> Exit\n");
-		//scanf("%d", &n);
 		n = checkChar(input);
 
-		if(n == 1) {
-			int id = 0;
-			int tam = 0;
+		switch (n)
+		{
+		case 1:
+			id = 0;
+			tam = 0;
 
 			printf("-> How many trains will be added?:\n");
 			tam = checkChar(input);
 
-			for(int i = 0; i < tam; i++) {
+			for (int i = 0; i < tam; i++)
+			{
 				printf("-> Type the %dB: train id:\n", i + 1);
 
 				id = checkChar(input);
 				addTrain(&l, id);
 			}
-			printf("\n-> Trains added successfully! --\n\n");
-		}
-		else if(n == 2) {
-			int id = 0;
+			break;
+		case 2:
+			id = 0;
 
 			printf("-> Type the id of the train that will be removed:\n");
 			id = checkChar(input);
 
 			removeTrain(&l, id);
 			printf("\n-> Train removed successfully! --\n\n");
-		}
-		else if(n == 3) {
-			int idT = 0;
-			int idW = 0;
+			break;
+		case 3:
+			idT = 0;
+			idW = 0;
 			char c[31];
-			int p = 0;
-
+			p = 0;
 
 			printf("-> Type the train's id:\n");
 			idT = checkChar(input);
@@ -58,57 +67,109 @@ int main()
 			printf("-- Enter your answer: --\n");
 			scanf("%s", c);
 
-			Train* TTemp = l;
-			if(TTemp == NULL) {
-				printf("-- Empty train list --\n");
-				break;
-			}
-			while(TTemp->idT != idT) {
-				TTemp = TTemp->next;
+			Train *aux = searchForTrain(&l, idT);
+			if(aux == NULL){
+			    break;
 			}
 
-			printf("-> Type the wagon's position between 1 and %d:\n", TTemp -> wagonsAmount + 1);
+			printf("-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount + 1);
 			scanf("%d", &p);
+			
+			while(1){
+			    if(p >= 1 && p <= (aux->wagonsAmount+1)){
+			        break;
+			    }
+			    printf("-> Invalid position");
+			    printf("-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount + 1);
+			    scanf("%d", &p);
+			}
 
-			if(TTemp -> wagonsAmount == 0) {
+			if (aux->wagonsAmount == 0)
+			{
 				p = 1;
 			}
 
-			addWagon(&l, idT, idW, c, p);
-		}
-		else if(n == 4) {
-			int idT = 0;
-			int idW = 0;
+			addWagon(&aux, idW, c, p);
+			break;
+		case 4:
+			idT = 0;
+			idW = 0;
 
 			printf("-> Type the train's id:\n");
 			idT = checkChar(input);
 
-			printf("\n-> Type the wagon's id:\n");
-			idW = checkChar(input);
+			aux = searchForTrain(&l, idT);
+			if(aux == NULL){
+			    break;
+			}
 
-			removeWagon(&l, idT, idW);
-		}
-		else if(n == 5) {
-			int idT = 0;
-			int id2T = 0;
-			int pR = 0;
-			int pA = 0;
+			printf("\n-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount + 1);
+			scanf("%d", &idW);
+			
+			while(1){
+			    if(idW >= 1 && idW <= (aux->wagonsAmount+1)){
+			        break;
+			    }
+			    printf("-> Invalid position");
+			    printf("-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount + 1);
+			    scanf("%d", &idW);
+			}
+			
+
+			removeWagon(&aux, idW);
+			break;
+		case 5:
+			idT = 0;
+			id2T = 0;
+			pR = 0;
+			pA = 0;
 
 			printf("-> Type the train's id:\n");
 			idT = checkChar(input);
+
+			aux = searchForTrain(&l, idT);
+			if(aux == NULL){
+			    break;
+			}
 
 			printf("\n-> Type the id of the second train:\n");
 			id2T = checkChar(input);
+			
+			Train* aux2 = searchForTrain(&l, id2T);
+			if(aux2 == NULL){
+			    break;
+			}
 
-			printf("\n-> Type the position of the wagon:\n");
-			pR = checkChar(input);
+			printf("\n-> Type the position of the wagon to removed:\n");
+			scanf("%d", &pR);
+			
+			while(1){
+			    if(pR >= 1 && pR <= (aux->wagonsAmount+1)){
+			        break;
+			    }
+			    printf("-> Invalid position");
+			    printf("-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount + 1);
+			    scanf("%d", &pR);
+			}
+			
+			printf("\n-> Type the position of the wagon to added:\n");
+			scanf("%d", &pA);
+			
+			while(1){
+			    if(pA >= 1 && pA <= (aux2->wagonsAmount+1)){
+			        break;
+			    }
+			    printf("-> Invalid position");
+			    printf("-> Type the wagon's position between 1 and %d:\n", aux2->wagonsAmount + 1);
+			    scanf("%d", &pA);
+			}
+			
+			copyWagonToAnotherTrain(&aux, &aux2, pR, pA);
 
-			copyWagonToAnotherTrain(&l, idT, id2T, pR, pA);
-
-		}
-		else if(n == 6) {
-			int idT = 0;
-			int idW = 0;
+			break;
+		case 6:
+			idT = 0;
+			idW = 0;
 			int nP;
 
 			printf("-> Type the train's id:\n");
@@ -117,23 +178,33 @@ int main()
 			printf("\n-> Type the wagon's id:\n");
 			idW = checkChar(input);
 
-			Train *aux = searchForTrain(&l, idT);
-			printf("\n-> Type the wagon's new position between 1 and %d:\n", aux -> wagonsAmount);
-			nP = checkChar(input);
+			aux = searchForTrain(&l, idT);
+			if(aux == NULL){
+			    break;
+			}
+			printf("\n-> Type the wagon's new position between 1 and %d:\n", aux->wagonsAmount);
+			scanf("%d", &nP);
+			
+			while(1){
+			    if(nP >= 1 && nP <= (aux->wagonsAmount)){
+			        break;
+			    }
+			    printf("-> Invalid position");
+			    printf("-> Type the wagon's position between 1 and %d:\n", aux->wagonsAmount);
+			    scanf("%d", &nP);
+			}
 
-			changeOrderWagon(&l, idT, idW, nP);
-		}
-		else if(n == 7) {
+			changeOrderWagon(&aux, idW, nP);
+			break;
+		case 7:
 			printf("\n-- Train List --\n");
 			printTrainList(&l);
 			printf("-- Train List --\n\n");
-		}
-		else {
+			break;
+		default:
 			break;
 		}
+		printf("\n");
 	}
-
-	printf("\n");
-
-	return 0;
+return 0;
 }

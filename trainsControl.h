@@ -29,14 +29,12 @@ typedef struct wagons Wagons;
 void createTrainList(Train** t);
 void addTrain(Train** t, int idT);
 void removeTrain(Train** t, int idT);
-int addWagon(Train** t, int idT, int idW, char* productType, int position);
-Wagons* removeWagon(Train** t, int idT, int position);
-void copyWagonToAnotherTrain(Train** t, int idT, int id2T, int positionToRemove, int positionToAdd);
-void changeOrderWagon(Train** t, int idT, int idW, int newPosition);
+int addWagon(Train** t, int idW, char* productType, int position);
+Wagons* removeWagon(Train** t, int position);
+void copyWagonToAnotherTrain(Train** t, Train** t2, int positionToRemove, int positionToAdd);
+void changeOrderWagon(Train** t, int idW, int newPosition);
 void printTrainList(Train** t);
 int checkChar(char *input);
-int checkNum(int input);
-int checkNum(int input);
 Train *searchForTrain(Train **t, int idT);
 
 #endif
