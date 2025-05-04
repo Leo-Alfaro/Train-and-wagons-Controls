@@ -20,6 +20,7 @@ void addTrain(Train** t, int idT) {
 
 	//allocate memory to the object
 	Train *no = (Train*)malloc(sizeof(Train));
+	Train *aux;
 
 	//set the object's id with the new id
 	no -> idT = idT;
@@ -28,8 +29,16 @@ void addTrain(Train** t, int idT) {
 	//insert the object at the beginning of the list
 	no -> next = *t;
 
-	//change the list's beginning
-	*t = no;
+	Train* TTemp = *t;
+	while(TTemp != NULL && TTemp->idT != idT) {
+		TTemp = TTemp->next;
+	}
+	if(TTemp == NULL) {
+		*t = no;
+		printf("\n-- Train added successfully! --\n\n");
+	} else {
+		printf("\n-- This id already exists --\n");
+	}
 }
 
 void removeTrain(Train** t, int idT) {
@@ -62,10 +71,12 @@ void removeTrain(Train** t, int idT) {
 		}
 		if(temp == NULL) {
 			//object not found
-			printf("\nThis train does not exist\n");
+			printf("\n-- This train does not exist --\n");
+			return;
+		} else {
+			printf("\n-- Trains removed successfully! --\n\n");
 		}
 	}
-	printf("\n-> Trains added successfully! --\n\n");
 	//free the object
 	free(aux);
 }
@@ -169,6 +180,7 @@ Wagons* removeWagon(Train** t, int position) {
 	WTemp->next = NULL;
 	WTemp->prev = NULL;
 
+	printf("\n-> Wagon removed successfully! --\n\n");
 	return WTemp;
 }
 
